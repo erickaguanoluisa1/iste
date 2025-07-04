@@ -14,10 +14,7 @@ if [[ -z "$INTERFACE" ]]; then
   exit 1
 fi
 
-echo "[2/6] Instalando Snort..."
-sudo apt update && sudo apt install -y snort
-
-echo "[3/6] Activando modo promiscuo en $INTERFACE..."
+echo "[2/6] Activando modo promiscuo en $INTERFACE..."
 sudo ip link set $INTERFACE promisc on
 if ip link show "$INTERFACE" | grep -q PROMISC; then
   echo "✅ Modo promiscuo activado en $INTERFACE."
@@ -25,6 +22,9 @@ else
   echo "❌ Falló la activación de modo promiscuo en $INTERFACE."
   exit 1
 fi
+
+echo "[3/6] Instalando Snort..."
+sudo apt update && sudo apt install -y snort
 
 echo "[4/6] Configurando Snort para usar $INTERFACE..."
 sudo sed -i "s|^DEBIAN_SNORT_INTERFACE=.*|DEBIAN_SNORT_INTERFACE=\"$INTERFACE\"|" $DEBIAN_CONF
